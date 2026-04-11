@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encryption Algorithms Demo</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔐 Encryption Algorithms Demo</h1>
+            <p>Interactive visualization of cryptographic algorithms</p>
+        </header>
+
+        <!-- Tab Navigation -->
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="vigenere">Vigenère Cipher</button>
+            <button class="tab-btn" data-tab="elgamal">El Gamal Encryption</button>
+        </div>
+
+        <!-- Tab 1: Vigenère Cipher -->
+        <div id="vigenere" class="tab-content active">
+            <div class="tab-header">
+                <h2>Polyalphabetic Cipher (Vigenère)</h2>
+                <div class="description">
+                    <h4>How It Works:</h4>
+                    <p>
+                        The Vigenère cipher is a polyalphabetic substitution cipher that uses a <strong>keyword to determine shifts</strong>. 
+                        Unlike the Caesar cipher (which shifts all letters by the same amount), Vigenère shifts each letter 
+                        by <strong>different amounts based on corresponding keyword letters</strong>. This makes it much stronger and harder to break.
+                    </p>
+                    
+                    <h4>Encryption Formula:</h4>
+                    <div class="formula-box">
+                        <code>C<sub>i</sub> = (P<sub>i</sub> + K<sub>i mod |K|</sub>) mod 26</code>
+                        <p style="margin-top: 8px; font-size: 0.9em;">
+                            Where: C<sub>i</sub> = ciphertext character, P<sub>i</sub> = plaintext character, K = keyword (repeated)
+                        </p>
+                    </div>
+
+                    <h4>Visual Example:</h4>
+                    <div class="visual-example">
+                        <code style="line-height: 1.8;">
+Plaintext:   H    E    L    L    O<br>
+             (7)  (4) (11) (11) (14)   ← positions<br>
+             │    │    │    │    │<br>
+Keyword:     S    E    C    R    E<br>
+            (18)  (4)  (2) (17)  (4)   ← shifts<br>
+             │    │    │    │    │<br>
+Add &amp; MOD: (7+18) (4+4) (11+2) (11+17) (14+4) = 25 mod 26<br>
+             │    │    │    │    │<br>
+Ciphertext:  Z    I    N    I    S   ← result<br>
+                        </code>
+                    </div>
+
+                    <h4>Key Concepts:</h4>
+                    <ul style="margin-left: 20px; line-height: 2;">
+                        <li><strong>Keyword repeats:</strong> If plaintext is longer than keyword, keyword cycles through</li>
+                        <li><strong>26 alphabets:</strong> Each keyword letter creates a different shifting pattern</li>
+                        <li><strong>Letter positions:</strong> A=0, B=1, C=2, ... Z=25</li>
+                        <li><strong>Non-letters:</strong> Spaces and punctuation are preserved as-is</li>
+                    </ul>
+
+                    <h4>Security Note:</h4>
+                    <p style="background: #fff3cd; padding: 10px; border-radius: 4px; margin-top: 10px;">
+                        ⚠️ While stronger than Caesar cipher, Vigenère can still be broken through frequency analysis 
+                        if the keyword is short or repeated. Modern encryption is much more secure.
+                    </p>
+                </div>
+            </div>
+
+            <div class="input-section">
+                <div class="form-group">
+                    <label for="vig-plaintext">Plaintext:</label>
+                    <textarea id="vig-plaintext" placeholder="Enter text to encrypt (letters only)" rows="4"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="vig-keyword">Keyword:</label>
+                    <input type="text" id="vig-keyword" placeholder="Enter keyword (letters only)" value="SECRET">
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-encrypt" onclick="encryptVigenere()">🔒 Encrypt</button>
+                    <button class="btn btn-decrypt" onclick="decryptVigenere()">🔓 Decrypt</button>
+                    <button class="btn btn-reset" onclick="resetVigenere()">↻ Reset</button>
+                </div>
+            </div>
+
+            <!-- Output Section -->
+            <div class="output-section">
+                <div class="output-box">
+                    <h3>Output</h3>
+                    <div id="vig-output" class="output-text">Results will appear here...</div>
+                </div>
+            </div>
+
+            <!-- Step-by-step Visualization -->
+            <div class="visualization-section">
+                <h3>📊 Step-by-Step Encryption Process</h3>
+                <div id="vig-steps" class="steps-container">
+                    <p class="placeholder">Visualization will appear here...</p>
+                </div>
+            </div>
+
+            <!-- Ciphertext Display -->
+            <div class="result-section">
+                <div class="result-box">
+                    <h3>Ciphertext</h3>
+                    <div id="vig-ciphertext" class="result-text">-</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 2: El Gamal Encryption -->
+        <div id="elgamal" class="tab-content">
+            <div class="tab-header">
+                <h2>El Gamal Encryption (Asymmetric)</h2>
+                <div class="description">
+                    <h4>How It Works:</h4>
+                    <p>
+                        El Gamal is an <strong>asymmetric encryption algorithm</strong> based on the discrete logarithm problem. 
+                        Unlike Vigenère (which uses one shared key), El Gamal uses a <strong>public-private key pair</strong>. 
+                        Anyone can encrypt with the public key, but only the private key holder can decrypt. This is like a mailbox: 
+                        anyone can put mail in (encrypt), but only you have the key to open it (decrypt).
+                    </p>
+                    
+                    <h4>Three Phases:</h4>
+                    
+                    <div style="margin-left: 10px;">
+                        <strong>1️⃣ Key Generation:</strong>
+                        <div class="formula-box">
+                            <code>y = g<sup>x</sup> mod p</code>
+                            <p style="margin-top: 8px; font-size: 0.9em;">
+                                Select prime p, generator g<br>
+                                Private key: x (kept secret)<br>
+                                Public key: y (shared with everyone)
+                            </p>
+                        </div>
+
+                        <strong>2️⃣ Encryption (Anyone can do):</strong>
+                        <div class="formula-box">
+                            <code>
+                                c<sub>1</sub> = g<sup>k</sup> mod p<br>
+For each character M<sub>i</sub>:<br>
+                                c<sub>2</sub>[i] = (M<sub>i</sub> × y<sup>k</sup>) mod p<br>
+                                Ciphertext = (c<sub>1</sub>, [c<sub>2</sub>[0], c<sub>2</sub>[1], ...])
+                            </code>
+                            <p style="margin-top: 8px; font-size: 0.9em;">
+                                Where: k = random number (same for all), M<sub>i</sub> = each character (ASCII), p = prime<br>
+                                <strong>Each character is encrypted individually using the same k and c₁</strong>
+                            </p>
+                        </div>
+
+                        <strong>3️⃣ Decryption (Only private key holder):</strong>
+                        <div class="formula-box">
+                            <code>
+                                s = c<sub>1</sub><sup>x</sup> mod p<br>
+                                s<sup>-1</sup> = s<sup>(p-2)</sup> mod p<br>
+For each c<sub>2</sub>[i]:<br>
+                                M<sub>i</sub> = (c<sub>2</sub>[i] × s<sup>-1</sup>) mod p
+                            </code>
+                            <p style="margin-top: 8px; font-size: 0.9em;">
+                                Uses Fermat's Little Theorem for modular inverse<br>
+                                <strong>Each character is decrypted individually from its corresponding c₂ value</strong>
+                            </p>
+                        </div>
+                    </div>
+
+                    <h4>Visual Flow:</h4>
+                    <div class="visual-example">
+                        <code style="line-height: 1.8; font-size: 0.9em;">
+SENDER                           RECEIVER<br>
+  │                               │<br>
+  ├─ Sees public key y    ────→  │ (Receiver has x, p)<br>
+  │                               │<br>
+  ├─ Chooses random k             │<br>
+  ├─ Calculates c₁, c₂            │<br>
+  └─ Sends (c₁, c₂)      ────→   │<br>
+                                  │<br>
+                                  ├─ Uses private key x<br>
+                                  ├─ Calculates s = c₁^x mod p<br>
+                                  ├─ Finds s inverse<br>
+                                  └─ Recovers message: M = c₂ × s⁻¹<br>
+                        </code>
+                    </div>
+
+                    <h4>Why It's Secure:</h4>
+                    <ul style="margin-left: 20px; line-height: 2;">
+                        <li><strong>Discrete Log Problem:</strong> Finding x from y is computationally hard</li>
+                        <li><strong>Random k:</strong> Same message encrypts differently each time (shared across all characters)</li>
+                        <li><strong>Character-by-character encryption:</strong> Each character gets its own c₂ value using the same c₁</li>
+                        <li><strong>Large primes:</strong> Real implementations use 2048+ bit numbers</li>
+                        <li><strong>One-way function:</strong> Easy to encrypt, impossible to decrypt without x</li>
+                    </ul>
+
+                    <h4>Real-World Use:</h4>
+                    <p style="background: #d4edda; padding: 10px; border-radius: 4px; margin-top: 10px;">
+                        ✓ Used in PGP (Pretty Good Privacy) for secure email<br>
+                        ✓ Digital signatures and authentication<br>
+                        ✓ Modern internet security (TLS/SSL variations use similar principles)<br>
+                        ✓ Bitcoin and cryptocurrency transactions
+                    </p>
+                </div>
+            </div>
+
+            <div class="input-section">
+                <div class="form-group">
+                    <label for="eg-message">Message:</label>
+                    <textarea id="eg-message" placeholder="Enter message to encrypt" rows="3"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="eg-prime">Prime Number (p):</label>
+                    <input type="number" id="eg-prime" placeholder="Large prime number" value="257">
+                </div>
+
+                <div class="form-group">
+                    <label for="eg-generator">Generator (g):</label>
+                    <input type="number" id="eg-generator" placeholder="Primitive root of p" value="2">
+                </div>
+
+                <div class="form-group">
+                    <label for="eg-private-key">Private Key (x):</label>
+                    <input type="number" id="eg-private-key" placeholder="Secret key (1 < x < p)" value="7">
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-generate" onclick="generateElGamalKeys()">🔑 Generate Keys</button>
+                    <button class="btn btn-encrypt" onclick="encryptElGamal()">🔒 Encrypt</button>
+                    <button class="btn btn-decrypt" onclick="decryptElGamal()">🔓 Decrypt</button>
+                    <button class="btn btn-reset" onclick="resetElGamal()">↻ Reset</button>
+                </div>
+            </div>
+
+            <!-- Output Section -->
+            <div class="output-section">
+                <div class="output-grid">
+                    <div class="output-box">
+                        <h3>Public Key (y)</h3>
+                        <div id="eg-public-key" class="output-text">-</div>
+                    </div>
+                    <div class="output-box">
+                        <h3>Private Key (x)</h3>
+                        <div id="eg-private-key-display" class="output-text">-</div>
+                    </div>
+                </div>
+
+                <div class="output-box">
+                    <h3>Ciphertext (c1, c2)</h3>
+                    <div id="eg-ciphertext" class="output-text">-</div>
+                </div>
+
+                <div class="output-box">
+                    <h3>Decrypted Message</h3>
+                    <div id="eg-decrypted" class="output-text">-</div>
+                </div>
+            </div>
+
+            <!-- Step-by-step Visualization -->
+            <div class="visualization-section">
+                <h3>📊 El Gamal Process Steps</h3>
+                <div id="eg-steps" class="steps-container">
+                    <p class="placeholder">Steps will appear here...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error Modal -->
+    <div id="errorModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeErrorModal()">&times;</span>
+            <h2>Error</h2>
+            <p id="errorMessage"></p>
+            <button class="btn" onclick="closeErrorModal()">Close</button>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
