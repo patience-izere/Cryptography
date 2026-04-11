@@ -374,4 +374,8 @@ def internal_error(error):
 # ============================================================================
 
 if __name__ == '__main__':
-    app.run(debug=True, host='localhost', port=5000)
+    # Production: use debug=False and bind to all interfaces
+    import os
+    debug = os.getenv('FLASK_DEBUG', 'False') == 'True'
+    port = int(os.getenv('PORT', 5000))
+    app.run(debug=debug, host='0.0.0.0', port=port)
