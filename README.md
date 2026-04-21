@@ -1,11 +1,11 @@
 # Group 5 members:
-Irakoze Ritha Theonestine		26016751
-RUTIJANWA Herve		26017216
-NTAGANIRA Victor First-born		25052719
-Gitare Shema Nobel		26016298
-Clement MUTUYIMANA		25095065
-HATANGIMBABAZI Hilaire		25093937
-Izere Marie Vincent Patience		25093891
+### Irakoze Ritha Theonestine		26016751
+### RUTIJANWA Herve		26017216
+### NTAGANIRA Victor First-born		25052719
+### Gitare Shema Nobel		26016298
+### Clement MUTUYIMANA		25095065
+### HATANGIMBABAZI Hilaire		25093937
+### Izere Marie Vincent Patience		25093891
 
 #  Encryption Algorithms Assignment
 
