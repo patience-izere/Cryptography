@@ -355,7 +355,7 @@ function encryptElGamal() {
                 },
                 {
                     title: "Step 3: Encode Message to ASCII",
-                    detail: `Message: "${message}"<br>ASCII: ${Array.from(message).map((c, i) => `'${c}'=${c.charCodeAt(0)}`).join(', ')}`
+                    detail: `Message: "${message}" <br> ASCII: ${Array.from(message).map((c, i) => `'${c}'=${c.charCodeAt(0)}`).join(', ')}`
                 },
                 {
                     title: "Step 4: Calculate c2 for Each Character",

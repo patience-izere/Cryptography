@@ -308,8 +308,8 @@ def elgamal_endpoint():
             except ValueError:
                 return jsonify({'error': 'p, g, and y must be integers'}), 400
             
-            if len(message) > 50:
-                return jsonify({'error': 'Message too long (max 50 characters)'}), 400
+            if len(message) > 500:
+                return jsonify({'error': 'Message too long (max 500 characters)'}), 400
             
             try:
                 c1, c2_list, k, _ = ElGamalCrypto.encrypt(message, p, g, y)
